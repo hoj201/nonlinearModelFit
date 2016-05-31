@@ -165,7 +165,7 @@ classdef nonlinearModelFit
             dfdp = zeros(Ns,Np,Nd) ;
             
             % evaluate at initial conditions
-            [dxdtPoint,dfdxPoint,dfdpPoint] = user.fdyn(x(1:Ns),u(:,1),p) ;
+            [dxdtPoint,dfdxPoint,dfdpPoint] = user.fdyn(x(1:Ns,1),u(:,1),p) ;
             dxdt(:,1) = dxdtPoint ;
             dfdx(:,:,1) = dfdxPoint ;
             dfdp(:,:,1) = dfdpPoint ;
@@ -173,7 +173,7 @@ classdef nonlinearModelFit
             % this can be improved with arrayfun probably
             for idx = 2:Nd
                 % evaluate the system dynamics at each data point
-                [dxdtPoint,dfdxPoint,dfdpPoint] = user.fdyn(x(:,idx-1),u(:,idx),p) ;
+                [dxdtPoint,dfdxPoint,dfdpPoint] = user.fdyn(x(:,idx),u(:,idx),p) ;
                 
                 % fill in the matrices!
                 dxdt(:,idx) = dxdtPoint ;
@@ -201,7 +201,7 @@ classdef nonlinearModelFit
             dfdp = zeros(Ns,Np,Nd) ;
             
             % evaluate at initial conditions
-            [dxdtPoint,dfdxPoint,dfdpPoint] = user.fdyn(x(1:Ns),u(:,1),p) ;
+            [dxdtPoint,dfdxPoint,dfdpPoint] = user.fdyn(x(1:Ns,1),u(:,1),p) ;
             dxdt(:,1) = dxdtPoint ;
             dfdx(:,:,1) = dfdxPoint ;
             dfdp(:,:,1) = dfdpPoint ;
@@ -209,7 +209,7 @@ classdef nonlinearModelFit
             % this can be improved with arrayfun probably
             for idx = 2:Nd
                 % evaluate the system dynamics at each data point
-                [dxdtPoint,dfdxPoint,dfdpPoint] = user.fdyn(x(:,idx-1),u(:,idx-1),p) ;
+                [dxdtPoint,dfdxPoint,dfdpPoint] = user.fdyn(x(:,idx),u(:,idx),p) ;
                 
                 % fill in the matrices!
                 x(:,idx) = x(:,idx-1) + user.dt.*dxdtPoint ;

@@ -11,7 +11,7 @@ T = 4 ;
 
 Nstates = length(x0) ;
 Nparams = length(p) ;
-Ntime = 100 ;
+Ntime = 3 ;
 
 tvec = linspace(0,T,Ntime) ;
 uvec = ones(1,Ntime) ;
@@ -37,19 +37,6 @@ disp(['Gradient Norm: ',num2str(norm(sol.grad))])
 disp(['Hessian Norm: ',num2str(norm(sol.hessian))])
 % NOTES: it works, but it's not very accurate
 
-%% testing equality gradient
-u = user.input ;
-Ns = user.Nstates ;
-Np = user.Nparams ;
-Nd = user.Ndata ;
-
-[r,c] = size(user.z0) ;
-v = randn(r,c) ;
-[eq,geqAnl] = user.equalityConstraints(v) ;
-tic
-geqNum = numericJacobian(@user.equalityConstraints,1,v) ;
-toc
-disp(['Numeric vs. Analytic Gradients: ', num2str(norm(geqAnl - geqNum))])
 
 %% Initial testing
 clear
@@ -237,9 +224,10 @@ norm(geqAnl - geqNum)
 
 % testing cost gradient
 zz = rand(size(user.z0)) ;
-[~,geqAnl] = user.cost(zz) ;
+[c,geqAnl] = user.cost(zz) ;
 geqNum = numericJacobian(@user.cost,1,zz) ;
 norm(geqAnl - geqNum)
+
 
 %% Sinusoidal input
 % clear
@@ -427,6 +415,21 @@ norm(geqAnl - geqNum)
 
 %% testing cost gradient
 zz = rand(size(user.z0)) ;
-[~,geqAnl] = user.cost(zz) ;
+[c,geqAnl] = user.cost(zz) ;
 geqNum = numericJacobian(@user.cost,1,zz) ;
-norm(geqAnl - geqNum)*sol.finalCost
+norm(geqAnl - geqNum)
+sol.finalCost
+
+%% testing equality gradient
+u = user.input ;
+Ns = user.Nstates ;
+Np = user.Nparams ;
+Nd = user.Ndata ;
+
+[r,c] = size(user.z0) ;
+v = randn(r,c) ;
+[eq,geqAnl] = user.equalityConstraints(v) ;
+tic
+geqNum = numericJacobian(@user.equalityConstraints,1,v) ;
+toc
+disp(['Numeric vs. Analytic Gradients: ', num2str(norm(geqAnl - geqNum))])
